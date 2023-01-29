@@ -1,8 +1,8 @@
 {
     "schemaVersion": 1,
-    "id": "carrotconfig",
+    "id": "carrotconfigtest",
     "version": "${version}",
-    "name": "CarrotConfig",
+    "name": "CarrotConfigTestMod",
     "description": "TBD",
     "authors": [
         "2Retr0"
@@ -13,24 +13,16 @@
         "sources": "https://github.com/2Retr0/CarrotConfig"
     },
     "license": "MIT",
-    "icon": "assets/carrotconfig/icon.png",
+    "icon": "assets/carrotconfigtest/icon.png",
     "environment": "*",
     "entrypoints": {
         "client": [
-            "retr0.carrotconfig.CarrotConfig"
+            "retr0.carrotconfigtest.CarrotConfigTest"
         ]
     },
-    "mixins": [
-        "carrotconfig.mixins.json"
-    ],
     "depends": {
         "fabricloader": "*",
         "minecraft": "*",
-        "spruceui": "*"
-    },
-    "custom": {
-        "modmenu": {
-            "badges": [ "library" ]
-        }
+        "carrotconfig": "*"
     }
 }

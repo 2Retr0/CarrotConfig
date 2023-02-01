@@ -12,7 +12,6 @@ group               = project.maven_group
 
 repositories {
     mavenLocal()
-    maven { url 'https://maven.gegy.dev' }
     maven { url 'https://api.modrinth.com/maven' }
 }
 
@@ -46,7 +45,6 @@ loom {
         }
     }
 }
-
 
 processResources {
     inputs.property "version", project.version

@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CarrotConfig implements ClientModInitializer {
+public class CarrotConfigClient implements ClientModInitializer {
 	public static final String MOD_ID = "carrotconfig";
 
 	// This logger is used to write text to the console and the log file.
@@ -17,7 +17,5 @@ public class CarrotConfig implements ClientModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-
-		LOGGER.info("Hello Fabric world!");
 	}
 }

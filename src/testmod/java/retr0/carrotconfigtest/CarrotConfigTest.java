@@ -19,5 +19,7 @@ public class CarrotConfigTest implements ClientModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello CarrotConfig Test!");
+
+		TestConfig.init(MOD_ID, TestConfig.class);
 	}
 }

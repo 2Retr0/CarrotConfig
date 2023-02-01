@@ -3,7 +3,7 @@
     "id": "carrotconfig",
     "version": "${version}",
     "name": "CarrotConfig",
-    "description": "TBD",
+    "description": "MidnightConfig-based configuration!",
     "authors": [
         "2Retr0"
     ],
@@ -16,21 +16,14 @@
     "icon": "assets/carrotconfig/icon.png",
     "environment": "*",
     "entrypoints": {
-        "client": [
-            "retr0.carrotconfig.CarrotConfig"
-        ]
+        "client": [ "retr0.carrotconfig.CarrotConfigClient" ],
+        "modmenu": [ "retr0.carrotconfig.compat.AutoModMenu" ]
     },
-    "mixins": [
-        "carrotconfig.mixins.json"
-    ],
     "depends": {
         "fabricloader": "*",
-        "minecraft": "*",
-        "spruceui": "*"
+        "minecraft": "*"
     },
     "custom": {
-        "modmenu": {
-            "badges": [ "library" ]
-        }
+        "modmenu": { "badges": [ "library" ] }
     }
 }

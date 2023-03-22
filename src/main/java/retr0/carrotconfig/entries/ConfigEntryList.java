@@ -51,7 +51,7 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
         var hoveredEntry = getHoveredEntry();
 
         if (activeEntry != hoveredEntry && activeEntry instanceof ConfigTextEntry textEntry)
-            textEntry.textField.setTextFieldFocused(false);
+            textEntry.textField.setFocused(false);
         activeEntry = hoveredEntry;
 
         return super.mouseClicked(mouseX, mouseY, button);

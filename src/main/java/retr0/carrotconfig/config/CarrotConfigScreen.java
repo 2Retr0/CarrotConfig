@@ -101,7 +101,7 @@ public class CarrotConfigScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
 
-        drawCenteredText(matrices, textRenderer, title, width / 2, 10, 0xFFFFFF);
+        drawCenteredTextWithShadow(matrices, textRenderer, title, width / 2, 10, 0xFFFFFF);
         if (tooltip != null) renderOrderedTooltip(matrices, tooltip, mouseX, mouseY);
     }
 

@@ -45,7 +45,7 @@ public class CarrotConfigScreen extends Screen {
 
     @Override
     protected final void init() {
-        entries = new ConfigEntryList(this, "TEST", width, height, 32 ,height - 32, 25);
+        entries = new ConfigEntryList(this, modId + ".carrotconfig.title", width, height, 32 ,height - 32, 25);
 
         configEntries.forEach(entryInfo -> {
             AbstractConfigEntry entry;

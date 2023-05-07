@@ -19,14 +19,16 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static retr0.carrotconfig.CarrotConfigClient.LOGGER;
+
 public abstract class CarrotConfig {
-    public static final Map<String, Class<?>> configClassMap = new HashMap<>();
-    public static final List<EntryInfo> configEntries = new ArrayList<>();
+    public static final Map<String, ConfigInfo> configMap = new HashMap<>();
 
     private static final Gson gson = new GsonBuilder()
         .excludeFieldsWithModifiers(Modifier.TRANSIENT)
@@ -37,7 +39,7 @@ public abstract class CarrotConfig {
 
     public static void init(String modId, Class<?> configClass) {
         var configPath = FabricLoader.getInstance().getConfigDir().resolve(modId + ".json");
-        configClassMap.put(modId, configClass);
+        var entries = new ArrayList<EntryInfo>();
 
         for (var field : configClass.getFields()) {
             if (!field.isAnnotationPresent(Entry.class)) continue;
@@ -45,27 +47,37 @@ public abstract class CarrotConfig {
             try {
                 var translationKey = modId + "." + CarrotConfigClient.MOD_ID + "." + field.getName();
                 var defaultValue = field.get(null);
-                configEntries.add(
+                entries.add(
                     new EntryInfo(translationKey, field, defaultValue, field.getAnnotation(Entry.class).isColor()));
             } catch (IllegalAccessException ignored) {}
         }
+        configMap.put(modId, new ConfigInfo(configClass, configPath, List.copyOf(entries)));
 
         try {
             gson.fromJson(Files.newBufferedReader(configPath), configClass);
         } catch (Exception e) {
             write(modId);
         }
+
+        LOGGER.debug("Loaded config associated with modid " + modId + "!");
     }
 
-    public static void write(String modId) {
-        var path = FabricLoader.getInstance().getConfigDir().resolve(modId + ".json");
-        var configClass = configClassMap.get(modId);
 
+
+    public static void write(String modId) {
+        if (!configMap.containsKey(modId)) {
+            LOGGER.error("A config associated with modid " + modId + " was requested but could not be found!");
+            return;
+        }
+
+        var configInfo = configMap.get(modId);
+        var configPath = configInfo.path();
+        var configClass = configInfo.configClass();
         try {
-            if (!Files.exists(path)) Files.createFile(path);
+            if (!Files.exists(configPath)) Files.createFile(configPath);
 
             // Write config class values to the config file and notify ConfigSavedCallback listeners.
-            Files.write(path, gson.toJson(configClass.getDeclaredConstructor().newInstance()).getBytes());
+            Files.write(configPath, gson.toJson(configClass.getDeclaredConstructor().newInstance()).getBytes());
             ConfigSavedCallback.EVENT.invoker().onConfigSaved(configClass);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +86,12 @@ public abstract class CarrotConfig {
 
     @Environment(EnvType.CLIENT)
     public static Screen getScreen(Screen parent, String modId) {
-        return new CarrotConfigScreen(parent, modId);
+        if (!configMap.containsKey(modId)) {
+            LOGGER.error("A config associated with modid " + modId + " was requested but could not be found!");
+            return parent;
+        }
+
+        return new CarrotConfigScreen(parent, modId, configMap.get(modId).entries);
     }
 
     @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.FIELD)
@@ -103,4 +120,5 @@ public abstract class CarrotConfig {
     }
 
     public record EntryInfo(String translationKey, Field field, Object defaultValue, boolean isColor) { }
+    public record ConfigInfo(Class<?> configClass, Path path, List<EntryInfo> entries) { }
 }

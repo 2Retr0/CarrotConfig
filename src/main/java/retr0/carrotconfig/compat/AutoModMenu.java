@@ -18,7 +18,7 @@ public class AutoModMenu implements ModMenuApi {
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
         HashMap<String, ConfigScreenFactory<?>> factoryMap = new HashMap<>();
-        CarrotConfig.configClassMap.forEach((modId, cClass) ->
+        CarrotConfig.configMap.forEach((modId, configInfo) ->
             factoryMap.put(modId, parent -> CarrotConfig.getScreen(parent, modId)));
         return factoryMap;
     }

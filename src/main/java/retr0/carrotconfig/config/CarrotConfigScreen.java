@@ -21,8 +21,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static retr0.carrotconfig.config.CarrotConfig.configEntries;
-
 @Environment(EnvType.CLIENT)
 public class CarrotConfigScreen extends Screen {
     public final Screen parent;
@@ -30,24 +28,26 @@ public class CarrotConfigScreen extends Screen {
     public ButtonWidget doneButton;
     private final Set<String> invalidEntries = new HashSet<>();
 
-    public ConfigEntryList entries;
+    public ConfigEntryList entryList;
+    public List<CarrotConfig.EntryInfo> entries;
     private List<? extends OrderedText> tooltip;
     private final Map<AbstractConfigEntry, Field> entryMap = new HashMap<>();
 
-    protected CarrotConfigScreen(Screen parent, String modId) {
+    protected CarrotConfigScreen(Screen parent, String modId, List<CarrotConfig.EntryInfo> entries) {
         super(Text.translatable(modId + ".carrotconfig.title"));
 
         this.parent = parent;
         this.modId = modId;
+        this.entries = entries;
     }
 
 
 
     @Override
     protected final void init() {
-        entries = new ConfigEntryList(this, modId + ".carrotconfig.title", width, height, 32 ,height - 32, 25);
+        entryList = new ConfigEntryList(this, modId + ".carrotconfig.title", width, height, 32 ,height - 32, 25);
 
-        configEntries.forEach(entryInfo -> {
+        entries.forEach(entryInfo -> {
             AbstractConfigEntry entry;
             try {
                 var translationKey = entryInfo.translationKey();
@@ -64,10 +64,10 @@ public class CarrotConfigScreen extends Screen {
                     throw new IllegalStateException("Unexpected value: " + defaultValue);
 
                 entryMap.put(entry, entryInfo.field());
-                entries.addEntry(entry);
+                entryList.addEntry(entry);
             } catch (IllegalAccessException ignored) { }
         });
-        addDrawableChild(entries);
+        addDrawableChild(entryList);
 
         // TODO: make comments/title with multiline
         int headerX = width / 2 - 155, headerY = height - 29;
@@ -78,21 +78,15 @@ public class CarrotConfigScreen extends Screen {
         }).dimensions(headerX + 160, headerY, 150, 20).build());
 
         this.doneButton = this.addDrawableChild(new ButtonWidget.Builder(ScreenTexts.DONE, button -> {
-            write(modId);
+            entryMap.forEach((entry, field) -> {
+                try {
+                    if (entry instanceof ConfigEntry configEntry)
+                        field.set(null, configEntry.getValue());
+                } catch (IllegalAccessException ignored) { }
+            });
+            CarrotConfig.write(modId);
             Objects.requireNonNull(client).setScreen(parent);
         }).dimensions(headerX, headerY, 150, 20).build());
-    }
-
-
-
-    public void write(String modId) {
-        entryMap.forEach((entry, field) -> {
-            try {
-                if (entry instanceof ConfigEntry configEntry)
-                    field.set(null, configEntry.getValue());
-            } catch (IllegalAccessException ignored) { }
-        });
-        CarrotConfig.write(modId);
     }
 
 
@@ -109,7 +103,7 @@ public class CarrotConfigScreen extends Screen {
 
     @Override
     public void tick() {
-        entries.tick();
+        entryList.tick();
     }
 
 

@@ -1,8 +1,8 @@
 package retr0.carrotconfig.entries;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import retr0.carrotconfig.config.CarrotConfigScreen;
 
@@ -38,10 +38,11 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
 
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         var configEntry = getHoveredEntry();
-        configScreen.setTooltip(configEntry != null ? configEntry.tooltip : null);
+
+        if (configEntry != null) configScreen.setTooltip(configEntry.tooltip);
     }
 
 

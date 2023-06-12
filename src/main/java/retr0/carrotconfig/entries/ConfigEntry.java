@@ -1,11 +1,10 @@
 package retr0.carrotconfig.entries;
 
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -72,11 +71,11 @@ public class ConfigEntry extends AbstractConfigEntry {
 
     @Override
     public void render(
-        MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY,
+        DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY,
         boolean hovered, float tickDelta)
     {
-        children.forEach(widget -> { widget.setY(y); widget.render(matrices, mouseX, mouseY, tickDelta); });
-        DrawableHelper.drawTextWithShadow(matrices, textRenderer, name, 12, y + 5, 0xFFFFFF);
+        children.forEach(widget -> { widget.setY(y); widget.render(context, mouseX, mouseY, tickDelta); });
+        context.drawTextWithShadow(textRenderer, name, 12, y + 5, 0xFFFFFF);
     }
 
 

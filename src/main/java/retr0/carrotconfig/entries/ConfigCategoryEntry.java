@@ -2,8 +2,7 @@ package retr0.carrotconfig.entries;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -16,9 +15,9 @@ public class ConfigCategoryEntry extends AbstractConfigEntry {
 
     @Override
     public void render(
-        MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY,
+        DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY,
         boolean hovered, float tickDelta)
     {
-        DrawableHelper.drawCenteredTextWithShadow(matrices, textRenderer, this.name, x + entryWidth / 2, y + 5, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(textRenderer, this.name, x + entryWidth / 2, y + 5, 0xFFFFFF);
     }
 }

@@ -2,15 +2,14 @@ package retr0.carrotconfig.config;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.Nullable;
 import retr0.carrotconfig.entries.AbstractConfigEntry;
 import retr0.carrotconfig.entries.ConfigEntry;
 import retr0.carrotconfig.entries.ConfigEntryList;
@@ -30,7 +29,6 @@ public class CarrotConfigScreen extends Screen {
 
     public ConfigEntryList entryList;
     public List<CarrotConfig.EntryInfo> entries;
-    private List<? extends OrderedText> tooltip;
     private final Map<AbstractConfigEntry, Field> entryMap = new HashMap<>();
 
     protected CarrotConfigScreen(Screen parent, String modId, List<CarrotConfig.EntryInfo> entries) {
@@ -92,11 +90,10 @@ public class CarrotConfigScreen extends Screen {
 
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
 
-        drawCenteredTextWithShadow(matrices, textRenderer, title, width / 2, 10, 0xFFFFFF);
-        if (tooltip != null) renderOrderedTooltip(matrices, tooltip, mouseX, mouseY);
+        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 10, 0xFFFFFF);
     }
 
 
@@ -105,10 +102,6 @@ public class CarrotConfigScreen extends Screen {
     public void tick() {
         entryList.tick();
     }
-
-
-
-    public void setTooltip(@Nullable List<OrderedText> tooltip) { this.tooltip = tooltip; }
 
 
 

@@ -23,8 +23,6 @@ sourceSets {
 }
 
 loom {
-    createRemapConfigurations(sourceSets.testmod)
-
     runs {
         testmodClient {
             client()

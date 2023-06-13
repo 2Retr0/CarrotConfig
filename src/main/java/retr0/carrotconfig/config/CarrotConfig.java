@@ -59,14 +59,14 @@ public abstract class CarrotConfig {
             write(modId);
         }
 
-        LOGGER.debug("Loaded config associated with modid " + modId + "!");
+        LOGGER.info("Loaded configuration for " + modId + "!");
     }
 
 
 
     public static void write(String modId) {
         if (!configMap.containsKey(modId)) {
-            LOGGER.error("A config associated with modid " + modId + " was requested but could not be found!");
+            LOGGER.error("Configuration for " + modId + " was requested but could not be found!");
             return;
         }
 

@@ -7,13 +7,8 @@ import retr0.carrotconfig.config.CarrotConfig;
 import java.util.HashMap;
 import java.util.Map;
 
-import static retr0.carrotconfig.CarrotConfigClient.MOD_ID;
-
 public class AutoModMenu implements ModMenuApi {
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> CarrotConfig.getScreen(parent, MOD_ID);
-    }
+
 
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {

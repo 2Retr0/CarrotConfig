@@ -85,7 +85,7 @@ public class ConfigEntry extends AbstractConfigEntry {
         // Ensure reset button is deactivated if the value is not the default value.
         children.get(0).active = !value.equals(defaultValue);
         // Tick any widgets which are textFieldWidgets to allow input update.
-        children.forEach(widget -> { if (widget instanceof TextFieldWidget textField) textField.tick(); });
+//        children.forEach(widget -> { if (widget instanceof TextFieldWidget textField) textField.; });
     }
 
 

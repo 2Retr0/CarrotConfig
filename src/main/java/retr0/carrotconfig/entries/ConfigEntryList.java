@@ -10,15 +10,15 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
     private final CarrotConfigScreen configScreen;
     private AbstractConfigEntry activeEntry;
 
-    public ConfigEntryList(CarrotConfigScreen parent, int width, int height, int top, int bottom, int itemHeight) {
-        super(MinecraftClient.getInstance(), width, height, top, bottom, itemHeight);
+    public ConfigEntryList(CarrotConfigScreen parent, int width, int height, int y, int itemHeight) {
+        super(MinecraftClient.getInstance(), width, height, y, itemHeight);
         configScreen = parent;
     }
 
     public ConfigEntryList(
-        CarrotConfigScreen parent, String translationKey, int width, int height, int top, int bottom, int itemHeight)
+        CarrotConfigScreen parent, String translationKey, int width, int height, int y, int itemHeight)
     {
-        this(parent, width, height, top, bottom, itemHeight);
+        this(parent, width, height, y, itemHeight);
 
         if (Text.translatable(translationKey + ".name").getString().equals(translationKey + ".name"))
             return;
@@ -38,8 +38,8 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
 
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderWidget(context, mouseX, mouseY, delta);
         var configEntry = getHoveredEntry();
 
         if (configEntry != null) configScreen.setTooltip(configEntry.tooltip);

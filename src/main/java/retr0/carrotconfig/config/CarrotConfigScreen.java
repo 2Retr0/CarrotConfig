@@ -43,7 +43,10 @@ public class CarrotConfigScreen extends Screen {
 
     @Override
     protected final void init() {
-        entryList = new ConfigEntryList(this, modId + ".carrotconfig.title", width, height, 32 ,height - 32, 25);
+        // Launch thread to watch for external changes
+
+        // --- UI initialization ---
+        entryList = new ConfigEntryList(this, modId + ".carrotconfig.title", width, height - 64, 32, 25);
 
         entries.forEach(entryInfo -> {
             AbstractConfigEntry entry;
@@ -82,7 +85,7 @@ public class CarrotConfigScreen extends Screen {
                         field.set(null, configEntry.getValue());
                 } catch (IllegalAccessException ignored) { }
             });
-            CarrotConfig.write(modId);
+            CarrotConfig.writeConfig(modId);
             Objects.requireNonNull(client).setScreen(parent);
         }).dimensions(headerX, headerY, 150, 20).build());
     }
@@ -136,12 +139,12 @@ public class CarrotConfigScreen extends Screen {
 
 
 
-    public ConfigTextEntry createFloatEntry(String key, float defaultValue, float initValue) {
+    public ConfigTextEntry createFloatEntry(String key, float defaultValue, float initialValue) {
         Function<String, Object> floatParser = createParser(
             Float::parseFloat, isValid -> updateEntryValidity(key, isValid));
         Function<Object, Text> floatTextProvider = value -> Text.literal(String.valueOf((float) value));
 
-        return new ConfigTextEntry(key, width, defaultValue, initValue, floatTextProvider, floatParser);
+        return new ConfigTextEntry(key, width, defaultValue, initialValue, floatTextProvider, floatParser);
     }
 
 

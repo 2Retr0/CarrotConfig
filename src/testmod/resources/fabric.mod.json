@@ -16,9 +16,7 @@
     "icon": "assets/carrotconfigtest/icon.png",
     "environment": "*",
     "entrypoints": {
-        "client": [
-            "retr0.carrotconfigtest.CarrotConfigTest"
-        ]
+        "client": [ "retr0.carrotconfigtest.CarrotConfigTest" ]
     },
     "depends": {
         "fabricloader": "*",

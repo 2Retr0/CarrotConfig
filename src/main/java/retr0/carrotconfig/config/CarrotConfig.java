@@ -93,11 +93,13 @@ public abstract class CarrotConfig {
         }
 
         var configInfo = configMap.get(modId);
-        // Update entries if config was externally modified
         try {
+            // Update entries if config was externally modified
             var actualModifiedTime = Files.readAttributes(configInfo.path(), BasicFileAttributes.class).lastModifiedTime().toMillis();
             if (actualModifiedTime != configInfo.modifiedTime()) {
-                readConfig(modId, configInfo.configClass());
+                try {
+                    readConfig(modId, configInfo.configClass());
+                } catch (Exception ignored) {}
                 configInfo = configInfo.withModifiedTime(actualModifiedTime);
                 configMap.put(modId, configInfo);
             }

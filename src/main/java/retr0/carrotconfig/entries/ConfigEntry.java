@@ -53,6 +53,7 @@ public class ConfigEntry extends AbstractConfigEntry {
                         buttonWidget.setMessage(textProvider.apply(defaultValue));
                 });
             }).dimensions(width - 205, 0, 40, 20).build());
+        children.get(0).active = !defaultValue.equals(initialValue);
     }
 
 

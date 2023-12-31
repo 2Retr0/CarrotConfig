@@ -9,6 +9,8 @@
     "carrotconfigtest.carrotconfig.floatTest.name": "Float Test",
     "carrotconfigtest.carrotconfig.floatTest.tooltip": "Denotes the time (in minutes) a biome toast will be prevented from showing again (§oper biome§r).",
 
+    "carrotconfigtest.carrotconfig.commentTest.text": "This is an example comment--use it wisely!",
+
     "carrotconfigtest.carrotconfig.colorTest.name": "Color Test",
     "carrotconfigtest.carrotconfig.colorTest.tooltip": "This is a color test for carrotconfigtest mod!"
 

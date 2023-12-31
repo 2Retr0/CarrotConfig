@@ -23,7 +23,7 @@ public class ConfigEntry extends AbstractConfigEntry {
     private Object value;
 
     public ConfigEntry(String translationKey, int width, Object defaultValue, Object initialValue, Function<Object, Text> textProvider) {
-        super(Text.translatable(translationKey + ".name"));
+        super(Text.translatable(translationKey.isEmpty() ? "" : translationKey + ".name"));
         this.defaultValue = defaultValue;
         this.textProvider = textProvider;
         this.width = width;
@@ -74,7 +74,10 @@ public class ConfigEntry extends AbstractConfigEntry {
         DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY,
         boolean hovered, float tickDelta)
     {
-        children.forEach(widget -> { widget.setY(y); widget.render(context, mouseX, mouseY, tickDelta); });
+        children.forEach(widget -> {
+            widget.setY(y);
+            widget.render(context, mouseX, mouseY, tickDelta);
+        });
         context.drawTextWithShadow(textRenderer, name, 12, y + 5, 0xFFFFFF);
     }
 

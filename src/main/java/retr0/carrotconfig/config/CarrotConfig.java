@@ -113,12 +113,12 @@ public abstract class CarrotConfig {
         var entries = new ArrayList<EntryInfo>();
 
         for (var field : configClass.getFields()) {
-            if (!field.isAnnotationPresent(Entry.class)) continue;
+            if (!field.isAnnotationPresent(Entry.class) && !field.isAnnotationPresent(Comment.class)) continue;
 
             try {
                 var translationKey = modId + "." + CarrotConfigClient.MOD_ID + "." + field.getName();
                 var defaultValue = field.get(null);
-                entries.add(new EntryInfo(translationKey, field, defaultValue, field.getAnnotation(Entry.class).isColor()));
+                entries.add(new EntryInfo(translationKey, field, defaultValue, !field.isAnnotationPresent(Comment.class) && field.getAnnotation(Entry.class).isColor()));
             } catch (IllegalAccessException ignored) {}
         }
         return entries;
@@ -130,6 +130,8 @@ public abstract class CarrotConfig {
         double max() default Double.MAX_VALUE;
         boolean isColor() default false;
     }
+
+    @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.FIELD) public @interface Comment {}
 
     public record EntryInfo(String translationKey, Field field, Object defaultValue, boolean isColor) { }
     public record ConfigInfo(Class<?> configClass, Path path, List<EntryInfo> entries, long modifiedTime) {

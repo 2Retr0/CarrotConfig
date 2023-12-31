@@ -3,7 +3,6 @@ package retr0.carrotconfig.entries;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.text.Text;
 import retr0.carrotconfig.config.CarrotConfigScreen;
 
 public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
@@ -13,16 +12,6 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
     public ConfigEntryList(CarrotConfigScreen parent, int width, int height, int y, int itemHeight) {
         super(MinecraftClient.getInstance(), width, height, y, itemHeight);
         configScreen = parent;
-    }
-
-    public ConfigEntryList(
-        CarrotConfigScreen parent, String translationKey, int width, int height, int y, int itemHeight)
-    {
-        this(parent, width, height, y, itemHeight);
-
-        if (Text.translatable(translationKey + ".name").getString().equals(translationKey + ".name"))
-            return;
-        super.addEntry(new ConfigCategoryEntry(translationKey));
     }
 
 

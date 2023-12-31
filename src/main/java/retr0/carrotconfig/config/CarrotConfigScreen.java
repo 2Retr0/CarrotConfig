@@ -10,10 +10,8 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import retr0.carrotconfig.entries.AbstractConfigEntry;
-import retr0.carrotconfig.entries.ConfigEntry;
-import retr0.carrotconfig.entries.ConfigEntryList;
-import retr0.carrotconfig.entries.ConfigTextEntry;
+import retr0.carrotconfig.CarrotConfigClient;
+import retr0.carrotconfig.entries.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -32,7 +30,7 @@ public class CarrotConfigScreen extends Screen {
     private final Map<AbstractConfigEntry, Field> entryMap = new HashMap<>();
 
     protected CarrotConfigScreen(Screen parent, String modId, List<CarrotConfig.EntryInfo> entries) {
-        super(Text.translatable(modId + ".carrotconfig.title"));
+        super(Text.translatable(modId + ".carrotconfig.title").formatted(Formatting.BOLD, Formatting.GRAY));
 
         this.parent = parent;
         this.modId = modId;
@@ -46,7 +44,7 @@ public class CarrotConfigScreen extends Screen {
         // Launch thread to watch for external changes
 
         // --- UI initialization ---
-        entryList = new ConfigEntryList(this, modId + ".carrotconfig.title", width, height - 64, 32, 25);
+        entryList = new ConfigEntryList(this, width, height - 64, 32, 25);
 
         entries.forEach(entryInfo -> {
             AbstractConfigEntry entry;
@@ -61,13 +59,22 @@ public class CarrotConfigScreen extends Screen {
                     entry = createFloatEntry(translationKey, defaultFloat, (float) value);
                 else if (defaultValue instanceof Boolean defaultBoolean)
                     entry = createBooleanEntry(translationKey, defaultBoolean, (boolean) value);
+                else if (entryInfo.field().isAnnotationPresent(CarrotConfig.Comment.class))
+                    entry = createComment(translationKey);
+                else if (defaultValue instanceof HashMap<?, ?> defaultMap)
+                    return;
                 else
-                    throw new IllegalStateException("Unexpected value: " + defaultValue);
+                    throw new IllegalStateException("Failed to deserialize entry: " + defaultValue);
 
                 entryMap.put(entry, entryInfo.field());
                 entryList.addEntry(entry);
-            } catch (IllegalAccessException ignored) { }
+            } catch (Exception e) {
+                CarrotConfigClient.LOGGER.error(e.getMessage());
+            }
         });
+
+//        entryList.addEntry(createMapEntry("test", 0.0f, 0.0f));
+
         addDrawableChild(entryList);
 
         // TODO: make comments/title with multiline
@@ -115,6 +122,23 @@ public class CarrotConfigScreen extends Screen {
             invalidEntries.add(entryKey);
 
         this.doneButton.active = this.invalidEntries.isEmpty();
+    }
+
+
+    public ConfigCategoryEntry createComment(String key) {
+        return new ConfigCategoryEntry(key);
+    }
+
+
+    public ConfigMapEntry createMapEntry(String key, float defaultValue, float initialValue) {
+        Function<String, Object> floatParser = createParser(
+                Float::parseFloat, isValid -> updateEntryValidity(key, isValid));
+        Function<Object, Text> floatTextProvider = value -> Text.literal(String.valueOf((float) value));
+
+        var mapEntry = new ConfigMapEntry(key, width, defaultValue, initialValue, floatTextProvider, floatParser, this);
+        addDrawableChild(mapEntry.list);
+
+        return mapEntry;
     }
 
 

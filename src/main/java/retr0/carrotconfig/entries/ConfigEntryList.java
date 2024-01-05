@@ -9,8 +9,8 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
     private final CarrotConfigScreen configScreen;
     private AbstractConfigEntry activeEntry;
 
-    public ConfigEntryList(CarrotConfigScreen parent, int width, int height, int y, int itemHeight) {
-        super(MinecraftClient.getInstance(), width, height, y, itemHeight);
+    public ConfigEntryList(CarrotConfigScreen parent, int width, int height, int top, int bottom, int itemHeight) {
+        super(MinecraftClient.getInstance(), width, height, top, bottom, itemHeight);
         configScreen = parent;
     }
 
@@ -27,8 +27,8 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
 
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         var configEntry = getHoveredEntry();
 
         if (configEntry != null) configScreen.setTooltip(configEntry.tooltip);

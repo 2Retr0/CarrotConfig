@@ -44,7 +44,7 @@ public class CarrotConfigScreen extends Screen {
         // Launch thread to watch for external changes
 
         // --- UI initialization ---
-        entryList = new ConfigEntryList(this, width, height - 64, 32, 25);
+        entryList = new ConfigEntryList(this, width, height - 64, 32,height - 32, 25);
 
         entries.forEach(entryInfo -> {
             AbstractConfigEntry entry;
@@ -127,18 +127,6 @@ public class CarrotConfigScreen extends Screen {
 
     public ConfigCategoryEntry createComment(String key) {
         return new ConfigCategoryEntry(key);
-    }
-
-
-    public ConfigMapEntry createMapEntry(String key, float defaultValue, float initialValue) {
-        Function<String, Object> floatParser = createParser(
-                Float::parseFloat, isValid -> updateEntryValidity(key, isValid));
-        Function<Object, Text> floatTextProvider = value -> Text.literal(String.valueOf((float) value));
-
-        var mapEntry = new ConfigMapEntry(key, width, defaultValue, initialValue, floatTextProvider, floatParser, this);
-        addDrawableChild(mapEntry.list);
-
-        return mapEntry;
     }
 
 

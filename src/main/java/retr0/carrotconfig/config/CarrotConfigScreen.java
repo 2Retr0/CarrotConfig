@@ -10,6 +10,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import retr0.carrotconfig.CarrotConfigClient;
 import retr0.carrotconfig.entries.*;
 
@@ -20,6 +21,8 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class CarrotConfigScreen extends Screen {
+    public static final Identifier SEARCH_TEXTURE = new Identifier("textures/gui/sprites/icon/search.png");
+
     public final Screen parent;
     public final String modId;
     public ButtonWidget doneButton;
@@ -41,6 +44,7 @@ public class CarrotConfigScreen extends Screen {
 
     @Override
     protected final void init() {
+        super.init();
         // Launch thread to watch for external changes
 
         // --- UI initialization ---
@@ -72,19 +76,11 @@ public class CarrotConfigScreen extends Screen {
                 CarrotConfigClient.LOGGER.error(e.getMessage());
             }
         });
-
-//        entryList.addEntry(createMapEntry("test", 0.0f, 0.0f));
-
+        //        entryList.addEntry(createMapEntry("test", 0.0f, 0.0f));
         addDrawableChild(entryList);
 
-        // TODO: make comments/title with multiline
-        int headerX = width / 2 - 155, headerY = height - 29;
-
-        this.addDrawableChild(new ButtonWidget.Builder(ScreenTexts.CANCEL, button -> {
-            // TODO
-            Objects.requireNonNull(client).setScreen(parent);
-        }).dimensions(headerX + 160, headerY, 150, 20).build());
-
+        // --- Add Done and Cancel Buttons ---
+        int headerX = width / 2 - 155, headerY = height - 28;
         this.doneButton = this.addDrawableChild(new ButtonWidget.Builder(ScreenTexts.DONE, button -> {
             entryMap.forEach((entry, field) -> {
                 try {
@@ -95,12 +91,17 @@ public class CarrotConfigScreen extends Screen {
             CarrotConfig.writeConfig(modId);
             Objects.requireNonNull(client).setScreen(parent);
         }).dimensions(headerX, headerY, 150, 20).build());
+
+        this.addDrawableChild(new ButtonWidget.Builder(ScreenTexts.CANCEL, button -> {
+            Objects.requireNonNull(client).setScreen(parent);
+        }).dimensions(headerX + 160, headerY, 150, 20).build());
     }
 
 
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        renderBackgroundTexture(context);
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 10, 0xFFFFFF);
@@ -131,10 +132,10 @@ public class CarrotConfigScreen extends Screen {
 
 
     public ConfigTextEntry createIntEntry(String key, int defaultValue, int initialValue, boolean isColor) {
-        var intParser = createParser(
+        final var intParser = createParser(
             isColor ? value -> (Object) Integer.parseInt(value.substring(1), 16) : Integer::parseInt,
             isValid -> updateEntryValidity(key, isValid));
-        Function<Object, Text> intTextProvider = isColor ?
+        final Function<Object, Text> intTextProvider = isColor ?
             value -> Text.literal("#" + Integer.toHexString((int) value).toUpperCase()) :
             value -> Text.literal(String.valueOf(value));
 
@@ -152,9 +153,9 @@ public class CarrotConfigScreen extends Screen {
 
 
     public ConfigTextEntry createFloatEntry(String key, float defaultValue, float initialValue) {
-        Function<String, Object> floatParser = createParser(
+        final Function<String, Object> floatParser = createParser(
             Float::parseFloat, isValid -> updateEntryValidity(key, isValid));
-        Function<Object, Text> floatTextProvider = value -> Text.literal(String.valueOf((float) value));
+        final Function<Object, Text> floatTextProvider = value -> Text.literal(String.valueOf((float) value));
 
         return new ConfigTextEntry(key, width, defaultValue, initialValue, floatTextProvider, floatParser);
     }
@@ -162,7 +163,7 @@ public class CarrotConfigScreen extends Screen {
 
 
     public ConfigEntry createBooleanEntry(String key, boolean defaultValue, boolean initialValue) {
-        Function<Object, Text> textProvider = value -> ((boolean) value ? ScreenTexts.YES : ScreenTexts.NO)
+        final Function<Object, Text> textProvider = value -> ((boolean) value ? ScreenTexts.YES : ScreenTexts.NO)
             .copy().formatted((boolean) value ? Formatting.GREEN : Formatting.RED);
 
         var buttonEntry = new ConfigEntry(key, width, defaultValue, initialValue, textProvider);

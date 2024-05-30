@@ -10,6 +10,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import retr0.carrotconfig.CarrotConfigClient;
 import retr0.carrotconfig.entries.*;
 
@@ -28,7 +29,7 @@ public class CarrotConfigScreen extends Screen {
     public ConfigEntryList entryList;
     public List<CarrotConfig.EntryInfo> entries;
     private final Map<AbstractConfigEntry, Field> entryMap = new HashMap<>();
-
+    public static final Identifier OPTIONS_BACKGROUND_TEXTURE = new Identifier("textures/gui/options_background.png");
     protected CarrotConfigScreen(Screen parent, String modId, List<CarrotConfig.EntryInfo> entries) {
         super(Text.translatable(modId + ".carrotconfig.title").formatted(Formatting.BOLD, Formatting.GRAY));
 
@@ -98,7 +99,7 @@ public class CarrotConfigScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackgroundTexture(context);
+        renderBackgroundTexture(context, OPTIONS_BACKGROUND_TEXTURE, 0, 0, 0.0F, 0.0F, this.width, this.height);
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 10, 0xFFFFFF);

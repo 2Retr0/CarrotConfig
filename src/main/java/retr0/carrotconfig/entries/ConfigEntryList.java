@@ -52,7 +52,7 @@ public class ConfigEntryList extends ElementListWidget<AbstractConfigEntry> {
     }
 
 
-    @Override public int getScrollbarPositionX() { return width - 7; }
+    @Override public int getScrollbarX() { return width - 7; }
 
     @Override public int getRowWidth() { return 10000; }
 }
